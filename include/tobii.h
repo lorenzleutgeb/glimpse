@@ -13,7 +13,9 @@ permission is obtained from Tobii AB.
 #ifndef tobii_h_included
 #define tobii_h_included
 
+/* Required for: uint32_t, int64_t */
 #include <stdint.h>
+/* Required for: size_t */
 #include <stddef.h>
 
 #ifdef __cplusplus
