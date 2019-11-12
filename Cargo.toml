@@ -2,10 +2,19 @@
 name = "glimpse"
 version = "0.1.0"
 authors = ["Lorenz Leutgeb <lorenz@leutgeb.xyz>"]
-edition = "2018"
 
 [dependencies]
+#enigo = "0.0.13"
 uinput = "0.1.3"
+tokio-serial = "3.2"
+bytes = "*"
+tokio = "*"
+tokio-io = "*"
+futures = "*"
+hex = "*"
+cgmath = "0.15"
+enigo = {git="https://github.com/trishume/enigo"}
+tobii-sys = { path = "../../trishume/tobii-sys" }
 
 [build-dependencies]
 bindgen = "0.49.2"
