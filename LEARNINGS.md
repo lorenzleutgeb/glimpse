@@ -23,3 +23,8 @@
 
 ## Tobii USB Service Daemon
  - If it does not work, try `mkdir /var/run/tobiiusb`
+
+## Other
+ - Align screens:
+
+       xrandr --output HDMI-2 --auto --pos 0x0 --output eDP-1 --auto --pos 320x1440

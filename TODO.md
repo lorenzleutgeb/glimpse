@@ -12,4 +12,5 @@
 
 ## Nice to Have
  - Change cursor to crosshair when enabled.
-
+ - Use Tobii to estimate distance between head and screen, then adjust relative movement
+   to be larger with greater distance.
