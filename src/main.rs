@@ -1,10 +1,9 @@
 extern crate cgmath;
 extern crate enigo;
-extern crate tobii_sys;
+extern crate tokio;
 
 mod gyro_input;
 mod inputs;
-mod tobii_input;
 
 use cgmath::prelude::MetricSpace;
 use cgmath::{vec2, vec3, Vector2};
@@ -294,8 +293,8 @@ fn euclidean_distance(x1: i32, y1: i32, x2: i32, y2: i32) -> i32 {
 
 fn main() {
     let (mut pool, rx) = InputPool::new();
-    pool.spawn(tobii_input::listen);
-    pool.spawn(gyro_input::listen);
+    //pool.spawn(tobii_input::listen);
+    //pool.spawn(gyro_input::listen);
 
     let handle = thread::spawn(|| run_pipeline(rx));
     handle.join().unwrap();

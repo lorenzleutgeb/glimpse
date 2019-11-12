@@ -6,12 +6,13 @@ use std::sync::mpsc::{Receiver, SyncSender};
 
 use crate::inputs::{Input, InputAction};
 
-use futures::{Future, Stream};
 use std::{env, io, str};
-use tokio::codec::{Decoder, Encoder, Framed};
+use tokio_io::codec::{Decoder, Encoder, Framed};
 
 use bytes::{ByteOrder, BytesMut, LittleEndian};
 use std::process::Command;
+
+use crate::tokio::prelude::{Future, Stream};
 
 #[cfg(unix)]
 const DEFAULT_TTY: &str = "/dev/ttyUSB0";
@@ -107,7 +108,7 @@ impl Decoder for LineCodec {
                         frame.advance(2);
                         let temp = (LittleEndian::read_i16(&mut frame) as f32) / 100f32;
                         //println!("anv {0:6.3} {1:6.3} {2:6.3}", x, y, z);
-                        self.output.send(Input::Gyro { x: x, y: z });
+                        self.output.send(Input::Gyro { x, y: z });
                         Ok(Some("Attempted decode".to_string()))
                     }
                     0x53 => {
@@ -125,9 +126,9 @@ impl Decoder for LineCodec {
                         let temp = (LittleEndian::read_i16(&mut frame) as f32) / 100f32;
                         // println!("yaw {0:6.3}    pitch {1:6.3}     ignore {2:6.3}", yaw, roll, pitch);
                         self.output.send(Input::HeadAngle {
-                            roll: roll,
-                            pitch: pitch,
-                            yaw: yaw,
+                            roll,
+                            pitch,
+                            yaw,
                         });
                         //move_cursor_relative((z * -1.5f32) as i32, x as i32);
                         Ok(Some("Attempted decode".to_string()))
@@ -169,15 +170,11 @@ pub fn listen(output: SyncSender<Input>, inbox: Receiver<InputAction>) {
     port.set_exclusive(false)
         .expect("Unable to set serial port exlusive");
 
-    let lc = LineCodec { output: output };
+    let (_, reader) = LineCodec{output}.framed(port).split();
 
-    //let (_, reader) = lc.framed(port);//.split();
-    let framed = lc.framed(port);//.split();
-    //let reader = Framed::new(port, lc);
-
-    let printer = framed
+    let printer = reader
         .for_each(|s| {
-            //println!("{:?}", s);
+            println!("{:?}", s);
             Ok(())
         })
         .map_err(|e| eprintln!("{}", e));
