@@ -1,6 +1,7 @@
 extern crate cgmath;
 extern crate enigo;
 extern crate tobii_sys;
+extern crate tokio;
 
 mod gyro_input;
 mod inputs;
